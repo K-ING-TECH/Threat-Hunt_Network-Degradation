@@ -23,6 +23,7 @@ DeviceNetworkEvents
 | summarize ConnectionCount = count() by ActionType, DeviceName, LocalIP
 | sort by ConnectionCount desc
 ```
+ ![Image Alt](https://github.com/K-ING-TECH/Threat-Hunt_Network-Degradation/blob/main/img1.png?raw=true)
 
 2️⃣ Identifying a Port Scan
 Examining **king-vm**, we discovered failed connection requests occurring sequentially across ports, indicating an internal port scan.
@@ -36,6 +37,7 @@ DeviceNetworkEvents
 | where LocalIP == DeviceInQuestion
 | order by Timestamp desc
 ```
+ ![Image Alt](https://github.com/K-ING-TECH/Threat-Hunt_Network-Degradation/blob/main/img2.png?raw=true)
 
 3️⃣ Suspicious PowerShell Execution
 Investigating logs around the suspected port scan (2025-02-12T16:15:37Z), we discovered an unauthorized PowerShell script execution:
@@ -53,6 +55,7 @@ DeviceProcessEvents
 | order by Timestamp desc
 | project Timestamp, FileName, InitiatingProcessCommandLine
 ```
+ ![Image Alt](https://github.com/K-ING-TECH/Threat-Hunt_Network-Degradation/blob/main/img3.png?raw=true)
 
 4️⃣ Identifying the Responsible User
 By extending the query, we identified the account responsible for launching the process.
@@ -68,6 +71,7 @@ DeviceProcessEvents
 | order by Timestamp desc
 | project Timestamp, FileName, InitiatingProcessCommandLine, AccountName
 ```
+ ![Image Alt](https://github.com/K-ING-TECH/Threat-Hunt_Network-Degradation/blob/main/img4.png?raw=true)
 
 📜 Query to check file creation:
 ```kusto
@@ -75,6 +79,7 @@ DeviceFileEvents
 | where DeviceName contains "king"
 | where FileName contains "portscan"
 ```
+ ![Image Alt](https://github.com/K-ING-TECH/Threat-Hunt_Network-Degradation/blob/main/img5.png?raw=true)
 
 ## 🚀 Immediate Action Taken
 Discussed with the user (KING) – they denied running the script.
@@ -82,14 +87,22 @@ Isolated the machine from the network.
 Ran a malware scan – no threats detected.
 Submitted a request to reimage the machine as a precaution.
 
+ ![Image Alt](https://github.com/K-ING-TECH/Threat-Hunt_Network-Degradation/blob/main/img6.png?raw=true)
+
 ## 🔥 MITRE ATT&CK Framework - Identified TTPs
 TTP ID	Description
-T1046	Network Service Scanning
-T1059.001	Command and Scripting Interpreter: PowerShell
-T1547.001	Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder (Possible)
-T1202	Indirect Command Execution
-T1078	Valid Accounts
-T1021.001	Remote Services: Remote Desktop Protocol (Possible)
+
+**T1046**      -  Network Service Scanning
+
+**T1059.001**	 -  Command and Scripting Interpreter: PowerShell
+
+**T1547.001**	 -  Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder (Possible)
+
+**T1202**	   -    Indirect Command Execution
+
+**T1078**	    -   Valid Accounts
+
+**T1021.001**	-   Remote Services: Remote Desktop Protocol (Possible)
 
 ## 🛠 Response Plan: Mitigating the Confirmed Threat
 # 🛑 Containment
