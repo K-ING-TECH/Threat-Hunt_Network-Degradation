@@ -13,7 +13,7 @@ After ruling out **external DDoS attacks**, the **security team** suspects unaut
 
 ## 🕵️ Timeline & Findings
 
-### **1️⃣ Failed Connection Requests**
+### **1. Failed Connection Requests**
 Several internal devices are failing connection requests. To investigate, we focused on **king-vm**.
 
 #### 📜 Query:
@@ -25,7 +25,7 @@ DeviceNetworkEvents
 ```
  ![Image Alt](https://github.com/K-ING-TECH/Threat-Hunt_Network-Degradation/blob/main/img1.png?raw=true)
 
-2️⃣ Identifying a Port Scan
+### 2. Identifying a Port Scan
 Examining **king-vm**, we discovered failed connection requests occurring sequentially across ports, indicating an internal port scan.
 
 📜 Query:
@@ -39,7 +39,7 @@ DeviceNetworkEvents
 ```
  ![Image Alt](https://github.com/K-ING-TECH/Threat-Hunt_Network-Degradation/blob/main/img2.png?raw=true)
 
-3️⃣ Suspicious PowerShell Execution
+### 3. Suspicious PowerShell Execution
 Investigating logs around the suspected port scan (2025-02-12T16:15:37Z), we discovered an unauthorized PowerShell script execution:
 
 "cmd.exe" /c powershell.exe -ExecutionPolicy Bypass -File C:\programdata\portscan.ps1
@@ -57,7 +57,7 @@ DeviceProcessEvents
 ```
  ![Image Alt](https://github.com/K-ING-TECH/Threat-Hunt_Network-Degradation/blob/main/img3.png?raw=true)
 
-4️⃣ Identifying the Responsible User
+### 4. Identifying the Responsible User
 By extending the query, we identified the account responsible for launching the process.
 
 📜 Query:
@@ -107,34 +107,34 @@ TTP ID	Description
 ## 🛠 Response Plan: Mitigating the Confirmed Threat
 # 🛑 Containment
 
-✅ Isolate the compromised machine (**king-vm-final**) from the network.
+-  Isolate the compromised machine (**king-vm-final**) from the network.
 
-✅ Suspend the compromised account (KING).
+-  Suspend the compromised account (KING).
 
-✅ Revoke all active sessions related to the compromised account.
+-  Revoke all active sessions related to the compromised account.
 
 # 🧹 Removal
-✅ Delete the malicious script (portscan.ps1).
+-  Delete the malicious script (portscan.ps1).
 
-✅ Clean startup locations and scheduled tasks.
+-  Clean startup locations and scheduled tasks.
 
-✅ Perform a full system scan using Microsoft Defender Antivirus.
+-  Perform a full system scan using Microsoft Defender Antivirus.
 
 # 🔄 Recovery
-✅ Reimage the machine to eliminate persistent threats.
+-  Reimage the machine to eliminate persistent threats.
 
-✅ Reset the compromised account password.
+-  Reset the compromised account password.
 
-✅ Implement AppLocker to block unauthorized PowerShell execution.
+-  Implement AppLocker to block unauthorized PowerShell execution.
 
 # 🚨 Monitoring & Prevention
-✅ Configure Microsoft Sentinel to detect port scanning behavior.
+-  Configure Microsoft Sentinel to detect port scanning behavior.
 
-✅ Deploy Defender for Endpoint attack surface reduction (ASR) rules.
+-  Deploy Defender for Endpoint attack surface reduction (ASR) rules.
 
-✅ Automate Sentinel playbooks to isolate compromised machines.
+-  Automate Sentinel playbooks to isolate compromised machines.
 
-✅ Monitor suspicious PowerShell execution (e.g., execution policy bypass).
+-  Monitor suspicious PowerShell execution (e.g., execution policy bypass).
 
 📜 Query to Detect Execution Policy Bypass:
 ```kusto
@@ -157,11 +157,11 @@ A precautionary reimage was performed.
 Mitigation strategies (AppLocker, ASR rules, Sentinel monitoring) were implemented.
 
 ## 🏆 Lessons Learned
-✔️ Restrict unnecessary PowerShell execution using AppLocker.
+- Restrict unnecessary PowerShell execution using AppLocker.
 
-✔️ Monitor for execution policy bypasses in PowerShell logs.
+- Monitor for execution policy bypasses in PowerShell logs.
 
-✔️ Implement stricter access control to limit privilege escalation.
+- Implement stricter access control to limit privilege escalation.
 
-✔️ Automate threat response via Sentinel playbooks.
+- Automate threat response via Sentinel playbooks.
 
