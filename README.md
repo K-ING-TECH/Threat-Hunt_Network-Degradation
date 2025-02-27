@@ -4,14 +4,14 @@
 The **server team** has observed significant network performance degradation on older devices attached to the `10.0.0.0/16` network.  
 After ruling out **external DDoS attacks**, the **security team** suspects unauthorized internal activity.
 
-## 🔎 Description
+## Description
 - **All internal traffic is allowed** by default.  
 - **Unrestricted** use of PowerShell and other administrative tools.  
 - Possible causes: **large file downloads** or **port scanning** against internal hosts.  
 
 ---
 
-## 🕵️ Timeline & Findings
+## Timeline & Findings
 
 ### **1. Failed Connection Requests**
 Several internal devices are failing connection requests. To investigate, we focused on **king-vm**.
@@ -81,7 +81,7 @@ DeviceFileEvents
 ```
  ![Image Alt](https://github.com/K-ING-TECH/Threat-Hunt_Network-Degradation/blob/main/img5.png?raw=true)
 
-## 🚀 Immediate Action Taken
+## Immediate Action Taken
 Discussed with the user (KING) – they denied running the script.
 Isolated the machine from the network.
 Ran a malware scan – no threats detected.
@@ -89,7 +89,7 @@ Submitted a request to reimage the machine as a precaution.
 
  ![Image Alt](https://github.com/K-ING-TECH/Threat-Hunt_Network-Degradation/blob/main/img6.png?raw=true)
 
-## 🔥 MITRE ATT&CK Framework - Identified TTPs
+## MITRE ATT&CK Framework - Identified TTPs
 TTP ID	Description
 
 **T1046**      -  Network Service Scanning
@@ -105,7 +105,7 @@ TTP ID	Description
 **T1021.001**	-   Remote Services: Remote Desktop Protocol (Possible)
 
 ## 🛠 Response Plan: Mitigating the Confirmed Threat
-# 🛑 Containment
+# Containment
 
 -  Isolate the compromised machine (**king-vm-final**) from the network.
 
@@ -113,21 +113,21 @@ TTP ID	Description
 
 -  Revoke all active sessions related to the compromised account.
 
-# 🧹 Removal
+# Removal
 -  Delete the malicious script (portscan.ps1).
 
 -  Clean startup locations and scheduled tasks.
 
 -  Perform a full system scan using Microsoft Defender Antivirus.
 
-# 🔄 Recovery
+# Recovery
 -  Reimage the machine to eliminate persistent threats.
 
 -  Reset the compromised account password.
 
 -  Implement AppLocker to block unauthorized PowerShell execution.
 
-# 🚨 Monitoring & Prevention
+# Monitoring & Prevention
 -  Configure Microsoft Sentinel to detect port scanning behavior.
 
 -  Deploy Defender for Endpoint attack surface reduction (ASR) rules.
@@ -143,7 +143,7 @@ DeviceProcessEvents
 | where InitiatingProcessCommandLine contains "-ExecutionPolicy Bypass"
 ```
 
-## 📌 Summary
+## Summary
 A port scan was detected from an internal machine (**king-vm-final**).
 
 The scan originated from a PowerShell script (portscan.ps1).
@@ -156,7 +156,7 @@ A precautionary reimage was performed.
 
 Mitigation strategies (AppLocker, ASR rules, Sentinel monitoring) were implemented.
 
-## 🏆 Lessons Learned
+## Lessons Learned
 - Restrict unnecessary PowerShell execution using AppLocker.
 
 - Monitor for execution policy bypasses in PowerShell logs.
