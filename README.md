@@ -23,7 +23,7 @@ DeviceNetworkEvents
 | summarize ConnectionCount = count() by ActionType, DeviceName, LocalIP
 | sort by ConnectionCount desc
 ```
- ![Image Alt](https://github.com/K-ING-TECH/Threat-Hunt_Network-Degradation/blob/main/img1.png?raw=true)
+![Network Image 1](images/img1.png)
 
 ### 2. Identifying a Port Scan
 Examining **king-vm**, we discovered failed connection requests occurring sequentially across ports, indicating an internal port scan.
@@ -37,7 +37,7 @@ DeviceNetworkEvents
 | where LocalIP == DeviceInQuestion
 | order by Timestamp desc
 ```
- ![Image Alt](https://github.com/K-ING-TECH/Threat-Hunt_Network-Degradation/blob/main/img2.png?raw=true)
+![Network Image 2](images/img2.png)
 
 ### 3. Suspicious PowerShell Execution
 Investigating logs around the suspected port scan (2025-02-12T16:15:37Z), we discovered an unauthorized PowerShell script execution:
@@ -55,7 +55,7 @@ DeviceProcessEvents
 | order by Timestamp desc
 | project Timestamp, FileName, InitiatingProcessCommandLine
 ```
- ![Image Alt](https://github.com/K-ING-TECH/Threat-Hunt_Network-Degradation/blob/main/img3.png?raw=true)
+![Network Image 3](images/img3.png)
 
 ### 4. Identifying the Responsible User
 By extending the query, we identified the account responsible for launching the process.
@@ -71,7 +71,7 @@ DeviceProcessEvents
 | order by Timestamp desc
 | project Timestamp, FileName, InitiatingProcessCommandLine, AccountName
 ```
- ![Image Alt](https://github.com/K-ING-TECH/Threat-Hunt_Network-Degradation/blob/main/img4.png?raw=true)
+![Network Image 4](images/img4.png)
 
 📜 Query to check file creation:
 ```kusto
@@ -79,7 +79,7 @@ DeviceFileEvents
 | where DeviceName contains "king"
 | where FileName contains "portscan"
 ```
- ![Image Alt](https://github.com/K-ING-TECH/Threat-Hunt_Network-Degradation/blob/main/img5.png?raw=true)
+![Network Image 5](images/img5.png)
 
 ## Immediate Action Taken
 Discussed with the user (KING) – they denied running the script.
@@ -87,7 +87,7 @@ Isolated the machine from the network.
 Ran a malware scan – no threats detected.
 Submitted a request to reimage the machine as a precaution.
 
- ![Image Alt](https://github.com/K-ING-TECH/Threat-Hunt_Network-Degradation/blob/main/img6.png?raw=true)
+![Network Image 6](images/img6.png)
 
 ## MITRE ATT&CK Framework - Identified TTPs
 TTP ID	Description
